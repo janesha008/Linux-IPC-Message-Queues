@@ -1,28 +1,3 @@
-# Linux-IPC-Message-Queues
-Linux IPC-Message Queues
-
-# AIM:
-To write a C program that receives a message from message queue and display them
-
-# DESIGN STEPS:
-
-### Step 1:
-
-Navigate to any Linux environment installed on the system or installed inside a virtual environment like virtual box/vmware or online linux JSLinux (https://bellard.org/jslinux/vm.html?url=alpine-x86.cfg&mem=192) or docker.
-
-### Step 2:
-
-Write the C Program using Linux message queues API 
-
-### Step 3:
-
-Execute the C Program for the desired output. 
-
-# PROGRAM:
-
-## C program that receives a message from message queue and display them
-
-```
 // ipcprog.c - Combined Writer/Reader for System V Message Queue
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +20,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Generate key
-    key = ftok("progfile", 65);
+    key = ftok("msqueue.c", 65);
     if (key == -1) {
         perror("ftok");
         return 1;
@@ -67,7 +42,7 @@ int main(int argc, char *argv[]) {
         fgets(message.mesg_text, sizeof(message.mesg_text), stdin);
         message.mesg_text[strcspn(message.mesg_text, "\n")] = 0; // remove newline
 
-        if (msgsnd(msgid, &message, sizeof(message), 0) == -1) {
+        if (msgsnd(msgid, &message, sizeof(message.mesg_text), 0) == -1) {
             perror("msgsnd");
             return 1;
         }
@@ -75,7 +50,7 @@ int main(int argc, char *argv[]) {
         printf("Message sent: %s\n", message.mesg_text);
     }
     else if (strcmp(argv[1], "reader") == 0) {
-        if (msgrcv(msgid, &message, sizeof(message), 1, 0) == -1) {
+        if (msgrcv(msgid, &message, sizeof(message.mesg_text), 1, 0) == -1) {
             perror("msgrcv");
             return 1;
         }
@@ -92,15 +67,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-```
-
-
-
-## OUTPUT
-
-
-![1](./ex4-img/1.png)
-
-
-# RESULT:
-The programs are executed successfully.
